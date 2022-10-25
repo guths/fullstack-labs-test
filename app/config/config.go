@@ -19,7 +19,7 @@ type env struct {
 var ENV *env
 
 func Load() {
-	log.Println("Loading app configs")
+	log.Println("loading app configs")
 
 	ENV = &env{Port: "", DBDriver: "", DBName: ""}
 
@@ -40,4 +40,6 @@ func Load() {
 	if err := viper.Unmarshal(ENV); err != nil {
 		log.Fatalln(fmt.Errorf("failed to unmarshal config. %w", err))
 	}
+
+	log.Println("app configs loaded")
 }

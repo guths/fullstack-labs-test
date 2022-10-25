@@ -18,9 +18,11 @@ issues:
         - gochecknoinits
         - forbidigo
         - wrapcheck
-    - path: cmd/migrate
+    - path: cmd
       linters:
         - forbidigo
+        - gochecknoglobals
+        - gochecknoinits
     - path: problem-solving
       linters:
         - forbidigo

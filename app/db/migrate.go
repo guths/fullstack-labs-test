@@ -14,6 +14,34 @@ import (
 )
 
 func Up() {
+	log.Println("migration up started")
+
+	var migration = buildMigrate()
+
+	migrationError := migration.Up()
+
+	if migrationError != nil {
+		log.Fatalln("fail when migration up execution : ", migrationError.Error())
+	}
+
+	log.Println("migration up finished")
+}
+
+func Down() {
+	log.Println("migration down started")
+
+	var migration = buildMigrate()
+
+	migrationError := migration.Down()
+
+	if migrationError != nil {
+		log.Fatalln("fail when migration down execution : ", migrationError.Error())
+	}
+
+	log.Println("migration down finished")
+}
+
+func buildMigrate() *migrate.Migrate {
 	config.Load()
 
 	var driver database.Driver
@@ -34,9 +62,5 @@ func Up() {
 		log.Fatalln("error creating new migrate instance : ", err.Error())
 	}
 
-	migrationError := migration.Up()
-
-	if migrationError != nil {
-		log.Fatalln("fail when migration execution : ", migrationError.Error())
-	}
+	return migration
 }
