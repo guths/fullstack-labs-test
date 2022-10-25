@@ -20,7 +20,9 @@ var ENV *env
 
 func Load() {
 	log.Println("Loading app configs")
-	ENV = &env{}
+
+	ENV = &env{Port: "", DBDriver: "", DBName: ""}
+
 	env := strings.ToLower(os.Getenv("GO_ENVIRONMENT"))
 	viper.SetConfigFile(fmt.Sprintf("%s.env", env))
 	viper.AddConfigPath(".")

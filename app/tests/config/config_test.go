@@ -1,29 +1,24 @@
-package tests_config
+package config_test
 
 import (
-	"battle-of-monsters/app/config"
-	tests_utils "battle-of-monsters/app/tests/utils"
 	"testing"
+
+	"battle-of-monsters/app/config"
+	testsutils "battle-of-monsters/app/tests/utils"
 )
 
-func TestLoad(t *testing.T){
+func TestLoad(t *testing.T) {
+	testsutils.LoadEnv()
 
-	tests_utils.LoadEnv()
-
-	port := config.ENV.Port
-	driver := config.ENV.DBDriver
-	dbName := config.ENV.DBName
-
-	if port != "8080" {
-		t.Errorf("Port expected as 8080 but got %v", port)
+	if config.ENV.Port != "8080" {
+		t.Errorf("Port expected as 8080 but got %v", config.ENV.Port)
 	}
 
-	if driver != "sqlite" {
-		t.Errorf("Driver expected as sqlite but got %v", driver)
+	if config.ENV.DBDriver != "sqlite" {
+		t.Errorf("Driver expected as sqlite but got %v", config.ENV.DBDriver)
 	}
 
-	if dbName != "db/db.test.sqlite" {
-		t.Errorf("Database name expected as db/db.test.sqlite but got %v", dbName)
+	if config.ENV.DBName != "db/db.test.sqlite" {
+		t.Errorf("Database name expected as db/db.test.sqlite but got %v", config.ENV.DBName)
 	}
-
 }

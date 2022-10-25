@@ -1,0 +1,45 @@
+output:
+  sort-results: true
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+  wsl:
+    allow-assign-and-anything: false
+  exhaustruct:
+    exclude:
+      - 'cobra\.Command$'
+      - '.*'
+
+issues:
+  exclude-rules:
+    - path: migrations/...
+      linters:
+        - gochecknoinits
+        - forbidigo
+        - wrapcheck
+    - path: cmd/migrate
+      linters:
+        - forbidigo
+    - path: problem-solving
+      linters:
+        - forbidigo
+    - source: "DB|CONN|ENV|migrations"
+      linters:
+        - gochecknoglobals
+    - text: TODO
+      linters:
+        - godox
+  
+linters:
+  enable-all: true
+  disable:
+    - exhaustivestruct
+    - gci
+    - paralleltest
+    - gofumpt
+
+    # deprecated
+    - interfacer
+    - scopelint
+    - maligned

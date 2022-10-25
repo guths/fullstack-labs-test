@@ -1,10 +1,11 @@
-package tests_utils
+package utilstests
 
 import (
-	"battle-of-monsters/app/config"
 	"fmt"
 	"os"
 	"regexp"
+
+	"battle-of-monsters/app/config"
 )
 
 // this should match the project root folder name.

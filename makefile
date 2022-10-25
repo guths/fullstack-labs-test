@@ -17,3 +17,6 @@ challenge-3:
 
 test:
 	go test ./app/tests/...
+
+lint:
+	golangci-lint run ./...
