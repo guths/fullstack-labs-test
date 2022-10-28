@@ -10,8 +10,8 @@ import (
 func TestLoad(t *testing.T) {
 	testsutils.LoadEnv()
 
-	if config.ENV.Port != "8080" {
-		t.Errorf("Port expected as 8080 but got %v", config.ENV.Port)
+	if config.ENV.Port != "4000" {
+		t.Errorf("Port expected as 4000 but got %v", config.ENV.Port)
 	}
 
 	if config.ENV.DBDriver != "sqlite" {

@@ -10,6 +10,8 @@ linters-settings:
     exclude:
       - 'cobra\.Command$'
       - '.*'
+  varnamelen:
+    min-name-length: 1
 
 issues:
   exclude-rules:

@@ -11,9 +11,10 @@ import (
 )
 
 type env struct {
-	Port     string `mapstructure:"PORT"`
-	DBDriver string `mapstructure:"DB_DRIVER"`
-	DBName   string `mapstructure:"DB_NAME"`
+	Port      string `mapstructure:"PORT"`
+	DBDriver  string `mapstructure:"DB_DRIVER"`
+	DBName    string `mapstructure:"DB_NAME"`
+	MaxMemory int64  `mapstructure:"MAX_MULTIPART_MEMORY"`
 }
 
 var ENV *env

@@ -10,21 +10,21 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
+var CONN *gorm.DB
 
 func Connect() *gorm.DB {
-	if DB != nil {
-		return DB
+	if CONN != nil {
+		return CONN
 	}
 
 	log.Println("Database connection started")
 
-	DB, err := gorm.Open(sqlite.Open(getDataBaseName()), &gorm.Config{})
-	if err != nil {
+	var err error
+	if CONN, err = gorm.Open(sqlite.Open(getDataBaseName()), &gorm.Config{}); err != nil {
 		panic(fmt.Errorf("failed to open the database connection. %w", err))
 	}
 
-	return DB
+	return CONN
 }
 
 func getDataBaseName() string {
