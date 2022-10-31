@@ -33,16 +33,16 @@ func FetchMonster(context *gin.Context) {
 
 func CreateMonster(context *gin.Context) {
 	var monsterRequest struct {
-		Name     string
-		Attack   uint
-		Defense  uint
-		Hp       uint
-		Speed    uint
-		ImageURL string
+		Name     string `json:"name" binding:"required,gte=1,lte=255"`
+		Attack   uint   `json:"attack" binding:"required"`
+		Defense  uint   `json:"defense" binding:"required"`
+		Hp       uint   `json:"hp" binding:"required"`
+		Speed    uint   `json:"speed" binding:"required"`
+		ImageURL string `json:"imageUrl" binding:"required,gte=1,lte=255"`
 	}
 
 	if err := context.BindJSON(&monsterRequest); err != nil {
-		log.Fatalln("error parsing monster request")
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 
 		return
 	}
