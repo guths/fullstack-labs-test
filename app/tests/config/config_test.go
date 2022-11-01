@@ -4,11 +4,11 @@ import (
 	"testing"
 
 	"battle-of-monsters/app/config"
-	testsutils "battle-of-monsters/app/tests/utils"
+	utilstests "battle-of-monsters/app/tests/utils"
 )
 
 func TestLoad(t *testing.T) {
-	testsutils.LoadEnv()
+	utilstests.LoadEnv()
 
 	if config.ENV.Port != "4000" {
 		t.Errorf("Port expected as 4000 but got %v", config.ENV.Port)

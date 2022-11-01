@@ -71,23 +71,32 @@ func UpdateMonster(context *gin.Context) {
 	monsterID := context.Param("monsterID")
 
 	var monsterRequest struct {
-		Name     string
-		Attack   uint
-		Defense  uint
-		Hp       uint
-		Speed    uint
-		ImageURL string
+		ID       uint   `json:"id" binding:"required"`
+		Name     string `json:"name" binding:"required,gte=1,lte=255"`
+		Attack   uint   `json:"attack" binding:"required"`
+		Defense  uint   `json:"defense" binding:"required"`
+		Hp       uint   `json:"hp" binding:"required"`
+		Speed    uint   `json:"speed" binding:"required"`
+		ImageURL string `json:"imageUrl" binding:"required,gte=1,lte=255"`
 	}
 
 	if err := context.BindJSON(&monsterRequest); err != nil {
-		log.Fatalln("error parsing monster request")
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 
 		return
 	}
 
 	var monster models.Monster
 
-	db.CONN.First(&monster, monsterID)
+	if result := db.CONN.First(&monster, monsterID); result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			context.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "Not Found"})
+		} else {
+			context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		}
+
+		return
+	}
 
 	monster.Name = monsterRequest.Name
 	monster.Attack = monsterRequest.Attack
@@ -107,6 +116,18 @@ func UpdateMonster(context *gin.Context) {
 
 func DeleteMonster(context *gin.Context) {
 	monsterID := context.Param("monsterID")
+
+	var monster models.Monster
+
+	if result := db.CONN.First(&monster, monsterID); result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			context.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "Not Found"})
+		} else {
+			context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		}
+
+		return
+	}
 
 	if result := db.CONN.Delete(&models.Monster{}, monsterID); result.Error != nil {
 		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": result.Error})

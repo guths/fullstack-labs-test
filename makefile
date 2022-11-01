@@ -4,6 +4,12 @@ migrate-up:
 migrate-down:
 	go run cli.go migrate down
 
+migrate-test-up:
+	GO_ENVIRONMENT=test go run cli.go migrate up
+
+migrate-test-down:
+	GO_ENVIRONMENT=test go run cli.go migrate down
+
 install:
 	go get ./...
 
