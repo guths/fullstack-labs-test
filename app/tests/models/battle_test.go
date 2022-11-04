@@ -1,7 +1,10 @@
 package models_test
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
+	"log"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -51,20 +54,43 @@ var _ = Describe("Battle", func() {
 				ImageURL: "https://fsl-assessment-public-files.s3.amazonaws.com/assessment-cc-01/red-unicorn.png",
 			}
 
-			db.CONN.Debug().Create(&blueSnake)
-			db.CONN.Debug().Create(&redUnicorn)
+			db.CONN.Create(&blueSnake)
+			db.CONN.Create(&redUnicorn)
 
 			battle := models.Battle{
-				MonsterA: models.Monster{ID: blueSnake.ID},
-				MonsterB: models.Monster{ID: redUnicorn.ID},
-				Winner:   models.Monster{ID: blueSnake.ID},
+				MonsterA: models.Monster{
+					ID:      blueSnake.ID,
+					Name:    blueSnake.Name,
+					Defense: blueSnake.Defense,
+					Attack:  blueSnake.Attack,
+					Hp:      blueSnake.Hp,
+					Speed:   blueSnake.Speed,
+				},
+				MonsterB: models.Monster{
+					ID:      redUnicorn.ID,
+					Name:    redUnicorn.Name,
+					Defense: redUnicorn.Defense,
+					Attack:  redUnicorn.Attack,
+					Hp:      redUnicorn.Hp,
+					Speed:   redUnicorn.Speed,
+				},
+				Winner: models.Monster{
+					ID:      blueSnake.ID,
+					Name:    blueSnake.Name,
+					Defense: blueSnake.Defense,
+					Attack:  blueSnake.Attack,
+					Hp:      blueSnake.Hp,
+					Speed:   blueSnake.Speed,
+				},
 			}
 
-			db.CONN.Debug().Create(&battle)
+			if r := db.CONN.Create(&battle); r.Error != nil {
+				log.Fatalln(r.Error)
+			}
 
 			db.CONN.Preload("Winner").Preload("MonsterA").Preload("MonsterB").First(&battle, battle.ID)
 
-			b, _ = battle.MarshalJSON()
+			b, _ = json.Marshal(battle)
 
 			expected = []byte(`{
 				"id": 1,
@@ -106,6 +132,62 @@ var _ = Describe("Battle", func() {
 
 			It("battle should match with the expected json", func() {
 				Expect(b).Should(MatchJSON(expected))
+			})
+
+		})
+
+	})
+
+	Describe("Validate", func() {
+
+		When("creating a battle", func() {
+
+			var errModel error
+
+			JustBeforeEach(func() {
+				blueSnake := models.Monster{
+					Name:     "Blue Snake",
+					Attack:   10,
+					Defense:  15,
+					Hp:       8,
+					Speed:    18,
+					ImageURL: "https://fsl-assessment-public-files.s3.amazonaws.com/assessment-cc-01/blue-snake.png",
+				}
+
+				db.CONN.Create(&blueSnake)
+
+				battle := models.Battle{
+					MonsterA: models.Monster{
+						ID:      blueSnake.ID,
+						Name:    blueSnake.Name,
+						Defense: blueSnake.Defense,
+						Attack:  blueSnake.Attack,
+						Hp:      blueSnake.Hp,
+						Speed:   blueSnake.Speed,
+					},
+					Winner: models.Monster{
+						ID:      blueSnake.ID,
+						Name:    blueSnake.Name,
+						Defense: blueSnake.Defense,
+						Attack:  blueSnake.Attack,
+						Hp:      blueSnake.Hp,
+						Speed:   blueSnake.Speed,
+					},
+				}
+
+				if r := db.CONN.Create(&battle); r.Error != nil {
+					errModel = r.Error
+				}
+
+			})
+
+			Context("should validate battle without monsterB", func() {
+
+				It("should return a error", func() {
+					var err models.ValidationErrors
+					Expect(errors.As(errModel, &err)).To(BeTrue())
+				})
+
 			})
 
 		})

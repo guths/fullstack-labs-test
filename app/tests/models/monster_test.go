@@ -1,6 +1,8 @@
 package models_test
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -45,7 +47,7 @@ var _ = Describe("Monster", func() {
 
 			db.CONN.Create(darkSnake)
 
-			m, _ = darkSnake.MarshalJSON()
+			m, _ = json.Marshal(darkSnake)
 
 			expected = []byte(`{
 				"id": 1,
@@ -64,6 +66,77 @@ var _ = Describe("Monster", func() {
 
 			It("monster should match with the expected json", func() {
 				Expect(m).Should(MatchJSON(expected))
+			})
+
+		})
+
+	})
+
+	Describe("Validate", func() {
+
+		When("creating a monster", func() {
+
+			var monster *models.Monster
+			var errModel error
+
+			JustBeforeEach(func() {
+				monster = &models.Monster{
+					Attack:   10,
+					Defense:  15,
+					Hp:       8,
+					Speed:    18,
+					ImageURL: "https://fsl-assessment-public-files.s3.amazonaws.com/assessment-cc-01/no-named.png",
+				}
+
+				if r := db.CONN.Create(monster); r.Error != nil {
+					errModel = r.Error
+				}
+
+			})
+
+			Context("should validate monster without name", func() {
+
+				It("should return a error", func() {
+					var err models.ValidationErrors
+					Expect(errors.As(errModel, &err)).To(BeTrue())
+				})
+
+			})
+
+		})
+
+		When("updating a monster", func() {
+
+			var monster *models.Monster
+			var errModel error
+
+			JustBeforeEach(func() {
+				monster = &models.Monster{
+					Name:     "Atomic Robot",
+					Attack:   11,
+					Defense:  12,
+					Hp:       7,
+					Speed:    11,
+					ImageURL: "https://fsl-assessment-public-files.s3.amazonaws.com/assessment-cc-01/atomic-robot.png",
+				}
+
+				db.CONN.Create(monster)
+
+				monster.Name = ""
+
+				if r := db.CONN.Save(&monster); r.Error != nil {
+					errModel = r.Error
+				}
+
+			})
+
+			Context("should validate monster without name", func() {
+
+				It("should return a error", func() {
+					var err models.ValidationErrors
+					Expect(errors.As(errModel, &err)).To(BeTrue())
+				})
+
 			})
 
 		})

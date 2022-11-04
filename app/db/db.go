@@ -24,6 +24,8 @@ func Connect() *gorm.DB {
 		panic(fmt.Errorf("failed to open the database connection. %w", err))
 	}
 
+	registerDBValidationsHooks(CONN)
+
 	return CONN
 }
 
