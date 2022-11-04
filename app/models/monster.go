@@ -3,19 +3,23 @@ package models
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"gorm.io/gorm"
 )
 
 type Monster struct {
-	gorm.Model
-	Name     string   `gorm:"not null;size:255"`
-	Attack   uint     `gorm:"not null"`
-	Defense  uint     `gorm:"not null"`
-	Hp       uint     `gorm:"not null"`
-	Speed    uint     `gorm:"not null"`
-	ImageURL string   `gorm:"not null"`
-	Battles  []Battle `gorm:"foreignKey:ID"`
+	ID        uint           `gorm:"primarykey" json:"id"`
+	Name      string         `gorm:"not null;size:255" json:"name"`
+	Attack    uint           `gorm:"not null" json:"attack"`
+	Defense   uint           `gorm:"not null" json:"defense"`
+	Hp        uint           `gorm:"not null" json:"hp"`
+	Speed     uint           `gorm:"not null" json:"speed"`
+	ImageURL  string         `gorm:"not null" json:"imageUrl"`
+	Battles   []Battle       `gorm:"foreignKey:ID" json:"battles"`
+	CreatedAt time.Time      `json:"-"`
+	UpdatedAt time.Time      `json:"-"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
 func (m *Monster) MarshalJSON() ([]byte, error) {
