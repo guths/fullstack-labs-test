@@ -28,6 +28,7 @@ issues:
     - path: problem-solving
       linters:
         - forbidigo
+        - testpackage
     - source: "DB|CONN|ENV|migrations"
       linters:
         - gochecknoglobals
