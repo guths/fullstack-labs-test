@@ -25,10 +25,10 @@ lint:
 	golangci-lint run ./...
 
 challenge-1:
-	go run problem-solving/challenge-1/main.go
+	go test -run TestChallenge1 ./problem-solving/challenge-1
 
 challenge-2:
-	go run problem-solving/challenge-2/main.go
+	go test -run TestChallenge2 ./problem-solving/challenge-2
 
 challenge-3:
 	go run problem-solving/challenge-3/main.go
