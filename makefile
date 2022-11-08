@@ -31,4 +31,4 @@ challenge-2:
 	go test -run TestChallenge2 ./problem-solving/challenge-2
 
 challenge-3:
-	go run problem-solving/challenge-3/main.go
+	go test -run TestChallenge3 ./problem-solving/challenge-3
