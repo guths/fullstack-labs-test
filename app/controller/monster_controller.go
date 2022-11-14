@@ -147,19 +147,19 @@ func ImportCSV(context *gin.Context) {
 
 	var input csvUploadInput
 	if err := context.ShouldBind(&input); err != nil {
-		context.String(http.StatusBadRequest, "get form error: %s", err.Error())
+		context.AbortWithStatus(http.StatusBadRequest)
 	}
 
 	file, err := input.CsvFile.Open()
 	if err != nil {
-		context.String(http.StatusBadRequest, "got error oppening csv: %s", err.Error())
+		context.AbortWithStatus(http.StatusBadRequest)
 	}
 
 	reader := csv.NewReader(file)
 
 	records, csvErr := reader.ReadAll()
 	if csvErr != nil {
-		context.String(http.StatusBadRequest, "got error reading csv: %s", err.Error())
+		context.AbortWithStatus(http.StatusBadRequest)
 	}
 
 	for i := 1; i < len(records); i++ {
