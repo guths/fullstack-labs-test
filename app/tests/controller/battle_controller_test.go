@@ -94,7 +94,7 @@ var _ = Describe("BattleController", func() {
 		var _ *httptest.ResponseRecorder
 
 		JustBeforeEach(func() {
-			req, _ := http.NewRequest(http.MethodGet, "/battle", nil)
+			req, _ := http.NewRequest(http.MethodPost, "/battle", nil)
 			_ = utilstests.ExecuteRequest(req)
 		})
 
