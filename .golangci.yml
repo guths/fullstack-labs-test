@@ -20,6 +20,9 @@ issues:
         - gochecknoinits
         - forbidigo
         - wrapcheck
+    - path: app/models/...
+      linters:
+        - nestif
     - path: cmd
       linters:
         - forbidigo
@@ -29,6 +32,8 @@ issues:
       linters:
         - forbidigo
         - testpackage
+        - gochecknoglobals
+        - cyclop
     - source: "DB|CONN|ENV|migrations"
       linters:
         - gochecknoglobals
