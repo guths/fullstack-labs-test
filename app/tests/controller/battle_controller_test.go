@@ -116,7 +116,7 @@ var _ = Describe("BattleController", func() {
 
 		Context("should insert a battle of monsters successfully with monster 1 winning", func() {
 
-			PIt("status code should be 200")
+			PIt("status code should be 201")
 
 			PIt("body should not be nil")
 
@@ -126,7 +126,7 @@ var _ = Describe("BattleController", func() {
 
 		Context("should insert a battle of monsters successfully with monster 2 winning", func() {
 
-			PIt("status code should be 200")
+			PIt("status code should be 201")
 
 			PIt("body should not be nil")
 
