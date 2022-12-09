@@ -4,14 +4,14 @@ import (
 	"battle-of-monsters/app/db"
 	"battle-of-monsters/app/models"
 	"encoding/csv"
-	"errors"
+	// "errors"
 	"log"
 	"mime/multipart"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
+	// "gorm.io/gorm"
 )
 
 func FetchMonster(context *gin.Context) {
@@ -19,12 +19,7 @@ func FetchMonster(context *gin.Context) {
 
 	var monster models.Monster
 	if result := db.CONN.First(&monster, monsterID); result.Error != nil {
-		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			context.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "Not Found"})
-		} else {
-			context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
-		}
-
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
 		return
 	}
 
@@ -43,7 +38,6 @@ func CreateMonster(context *gin.Context) {
 
 	if err := context.BindJSON(&monsterRequest); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-
 		return
 	}
 
@@ -58,7 +52,6 @@ func CreateMonster(context *gin.Context) {
 
 	if result := db.CONN.Create(&monster); result.Error != nil {
 		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": result.Error})
-
 		return
 	}
 
@@ -89,12 +82,7 @@ func UpdateMonster(context *gin.Context) {
 	var monster models.Monster
 
 	if result := db.CONN.First(&monster, monsterID); result.Error != nil {
-		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			context.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "Not Found"})
-		} else {
-			context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
-		}
-
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
 		return
 	}
 
@@ -107,7 +95,6 @@ func UpdateMonster(context *gin.Context) {
 
 	if result := db.CONN.Save(&monster); result.Error != nil {
 		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": result.Error})
-
 		return
 	}
 
@@ -120,18 +107,12 @@ func DeleteMonster(context *gin.Context) {
 	var monster models.Monster
 
 	if result := db.CONN.First(&monster, monsterID); result.Error != nil {
-		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			context.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "Not Found"})
-		} else {
-			context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
-		}
-
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
 		return
 	}
 
 	if result := db.CONN.Delete(&models.Monster{}, monsterID); result.Error != nil {
 		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": result.Error})
-
 		return
 	}
 

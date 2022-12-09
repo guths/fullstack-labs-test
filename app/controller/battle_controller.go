@@ -17,7 +17,6 @@ func ListBattles(context *gin.Context) {
 
 	if result = db.CONN.Find(&battle); result.Error != nil {
 		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
-
 		return
 	}
 
