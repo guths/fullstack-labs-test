@@ -42,7 +42,6 @@ var _ = Describe("MonsterController", func() {
 		}
 	})
 
-	// FIXME
 	Describe("List", func() {
 		var response *httptest.ResponseRecorder
 		var expectedURL = "https://fsl-assessment-public-files.s3.amazonaws.com/assessment-cc-01/blue-snake.png"

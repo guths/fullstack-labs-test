@@ -136,7 +136,6 @@ var _ = Describe("BattleController", func() {
 
 	})
 
-	// FIXME
 	Describe("Delete", func() {
 		var response *httptest.ResponseRecorder
 		var dragon *models.Monster
