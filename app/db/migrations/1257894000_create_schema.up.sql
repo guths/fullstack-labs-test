@@ -6,10 +6,7 @@ CREATE TABLE `battles` (
   `created_at` datetime,
   `updated_at` datetime,
   `deleted_at` datetime,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `fk_battles_monster_a` FOREIGN KEY (`monster_a`) REFERENCES `monsters`(`id`),
-  CONSTRAINT `fk_battles_monster_b` FOREIGN KEY (`monster_b`) REFERENCES `monsters`(`id`),
-  CONSTRAINT `fk_battles_winner` FOREIGN KEY (`winner`) REFERENCES `monsters`(`id`)
+  PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `monsters` (
