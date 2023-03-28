@@ -29,14 +29,14 @@ var _ = Describe("Challenge2", func() {
 	})
 
 	It("Test Case 4", func() {
-		value, err := diceFacesCalculator(1, 2, 1)
+		value, err := diceFacesCalculator(1, 3, 1)
 
 		Expect(err).ShouldNot(HaveOccurred())
 		Expect(value).To(Equal(2))
 	})
 
 	It("Test Case 5", func() {
-		value, err := diceFacesCalculator(3, 6, 3)
+		value, err := diceFacesCalculator(3, 5, 3)
 
 		Expect(err).ShouldNot(HaveOccurred())
 		Expect(value).To(Equal(6))
