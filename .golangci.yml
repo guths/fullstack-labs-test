@@ -28,12 +28,6 @@ issues:
         - forbidigo
         - gochecknoglobals
         - gochecknoinits
-    - path: problem-solving
-      linters:
-        - forbidigo
-        - testpackage
-        - gochecknoglobals
-        - cyclop
     - source: "DB|CONN|ENV|migrations"
       linters:
         - gochecknoglobals
