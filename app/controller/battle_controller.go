@@ -35,8 +35,8 @@ func Battle(context *gin.Context) {
 	}
 
 	var battleRequest struct {
-		MonsterA MonsterRequest `json:"monsterA" binding:"required"`
-		MonsterB MonsterRequest `json:"monsterB" binding:"required"`
+		MonsterA MonsterRequest `binding:"required" json:"monsterA"`
+		MonsterB MonsterRequest `binding:"required" json:"monsterB"`
 	}
 
 	var monsterA models.Monster

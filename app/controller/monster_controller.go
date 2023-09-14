@@ -120,7 +120,7 @@ func DeleteMonster(context *gin.Context) {
 }
 
 type csvUploadInput struct {
-	CsvFile *multipart.FileHeader `form:"file" binding:"required"`
+	CsvFile *multipart.FileHeader `binding:"required" form:"file"`
 }
 
 func ImportCSV(context *gin.Context) {

@@ -23,6 +23,13 @@ var _ = Describe("BattleController", func() {
 	var redUnicorn *models.Monster
 	var battle *models.Battle
 
+	var assertMonster = func(m map[string]interface{}) {
+		Expect(m["id"]).ToNot(BeNil())
+		Expect(m["monsterA"]).NotTo(BeNil())
+		Expect(m["monsterB"]).NotTo(BeNil())
+		Expect(m["winner"]).NotTo(BeNil())
+	}
+
 	BeforeEach(func() {
 		if err := db.CONN.Exec("DELETE FROM battles; DELETE FROM monsters;").Error; err != nil {
 			panic(fmt.Errorf("failed to delete battle and monsters. %w", err))
@@ -167,10 +174,7 @@ var _ = Describe("BattleController", func() {
 			It("body should have equivalent values", func() {
 				m, _ := utilstests.Deserialize(response.Body.String())
 
-				Expect(m["id"]).ToNot(BeNil())
-				Expect(m["monsterA"]).NotTo(BeNil())
-				Expect(m["monsterB"]).NotTo(BeNil())
-				Expect(m["winner"]).NotTo(BeNil())
+				assertMonster(m)
 			})
 
 		})
@@ -193,13 +197,10 @@ var _ = Describe("BattleController", func() {
 				Expect(response.Body).ToNot(BeNil())
 			})
 
-			It("body should have equivalent values", func() {
+			It("body should have equivalent values in monster", func() {
 				m, _ := utilstests.Deserialize(response.Body.String())
 
-				Expect(m["id"]).ToNot(BeNil())
-				Expect(m["monsterA"]).NotTo(BeNil())
-				Expect(m["monsterB"]).NotTo(BeNil())
-				Expect(m["winner"]).NotTo(BeNil())
+				assertMonster(m)
 			})
 		})
 
