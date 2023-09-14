@@ -33,9 +33,9 @@ func Load() {
 		var vipErr viper.ConfigFileNotFoundError
 		if ok := errors.As(err, &vipErr); ok {
 			log.Fatalln(fmt.Errorf("config file not found. %w", err))
-		} else {
-			log.Fatalln(fmt.Errorf("unexpected error loading config file. %w", err))
 		}
+
+		log.Fatalln(fmt.Errorf("unexpected error loading config file. %w", err))
 	}
 
 	if err := viper.Unmarshal(ENV); err != nil {

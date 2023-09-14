@@ -1,6 +1,8 @@
 package controller_test
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -89,49 +91,116 @@ var _ = Describe("BattleController", func() {
 
 	})
 
-	// TODO Implement the tests below
 	Describe("Battle", func() {
-		var _ *httptest.ResponseRecorder
+		var response *httptest.ResponseRecorder
 
-		JustBeforeEach(func() {
-			req, _ := http.NewRequest(http.MethodPost, "/battle", nil)
-			_ = utilstests.ExecuteRequest(req)
-		})
+		type Request struct {
+			MonsterA models.Monster `json:"monsterA"`
+			MonsterB models.Monster `json:"monsterB"`
+		}
 
 		Context("should fail when trying a battle of monsters with an undefined monster", func() {
+			JustBeforeEach(func() {
+				undefinedMonsterRequestJSON, _ := json.Marshal(Request{
+					MonsterA: *blueSnake,
+				})
+				req, _ := http.NewRequest(http.MethodPost, "/battle", bytes.NewBuffer(undefinedMonsterRequestJSON))
+				response = utilstests.ExecuteRequest(req)
+			})
 
-			PIt("status code should be 400")
+			It("status code should be 400", func() {
+				Expect(response.Code).To(Equal(400))
+			})
 
-			PIt("body should not be nil")
+			It("body should not be nil", func() {
+				Expect(response.Body).NotTo(BeNil())
+			})
 
 		})
 
 		Context("should fail when trying a battle of monsters with an inexistent monster", func() {
+			JustBeforeEach(func() {
+				inexistentMonsterRequestJSON, _ := json.Marshal(Request{
+					MonsterA: *blueSnake,
+					MonsterB: models.Monster{
+						ID:       999,
+						Name:     "RockandStone",
+						Attack:   100,
+						Defense:  1,
+						Speed:    999,
+						ImageURL: "http://fakeimage.com/1000x1000",
+						Hp:       999,
+					},
+				})
+				req, _ := http.NewRequest(http.MethodPost, "/battle", bytes.NewBuffer(inexistentMonsterRequestJSON))
+				response = utilstests.ExecuteRequest(req)
+			})
 
-			PIt("status code should be 404")
+			It("status code should be 404", func() {
+				Expect(response.Code).To(Equal(404))
+			})
 
-			PIt("body should not be nil")
+			It("body should not be nil", func() {
+				Expect(response.Body).NotTo(BeNil())
+			})
 
 		})
 
 		Context("should insert a battle of monsters successfully with monster 1 winning", func() {
+			JustBeforeEach(func() {
+				monsterAWinnerRequestJSON, _ := json.Marshal(Request{
+					MonsterA: *blueSnake,
+					MonsterB: *redUnicorn,
+				})
+				req, _ := http.NewRequest(http.MethodPost, "/battle", bytes.NewBuffer(monsterAWinnerRequestJSON))
+				response = utilstests.ExecuteRequest(req)
+			})
 
-			PIt("status code should be 201")
+			It("status code should be 201", func() {
+				Expect(response.Code).To(Equal(201))
+			})
 
-			PIt("body should not be nil")
+			It("body should not be nil", func() {
+				Expect(response.Body).ToNot(BeNil())
+			})
 
-			PIt("body should have equivalent values")
+			It("body should have equivalent values", func() {
+				m, _ := utilstests.Deserialize(response.Body.String())
+
+				Expect(m["id"]).ToNot(BeNil())
+				Expect(m["monsterA"]).NotTo(BeNil())
+				Expect(m["monsterB"]).NotTo(BeNil())
+				Expect(m["winner"]).NotTo(BeNil())
+			})
 
 		})
 
 		Context("should insert a battle of monsters successfully with monster 2 winning", func() {
+			JustBeforeEach(func() {
+				monsterBWinnerRequestJSON, _ := json.Marshal(Request{
+					MonsterA: *redUnicorn,
+					MonsterB: *blueSnake,
+				})
+				req, _ := http.NewRequest(http.MethodPost, "/battle", bytes.NewBuffer(monsterBWinnerRequestJSON))
+				response = utilstests.ExecuteRequest(req)
+			})
 
-			PIt("status code should be 201")
+			It("status code should be 201", func() {
+				Expect(response.Code).To(Equal(201))
+			})
 
-			PIt("body should not be nil")
+			It("body should not be nil", func() {
+				Expect(response.Body).ToNot(BeNil())
+			})
 
-			PIt("body should have equivalent values")
+			It("body should have equivalent values", func() {
+				m, _ := utilstests.Deserialize(response.Body.String())
 
+				Expect(m["id"]).ToNot(BeNil())
+				Expect(m["monsterA"]).NotTo(BeNil())
+				Expect(m["monsterB"]).NotTo(BeNil())
+				Expect(m["winner"]).NotTo(BeNil())
+			})
 		})
 
 	})
@@ -193,9 +262,13 @@ var _ = Describe("BattleController", func() {
 				response = utilstests.ExecuteRequest(req)
 			})
 
-			PIt("status code should be 404")
+			It("status code should be 404", func() {
+				Expect(response.Code).To(Equal(404))
+			})
 
-			PIt("body should not be nil")
+			It("body should not be nil", func() {
+				Expect(response.Body).NotTo(BeNil())
+			})
 
 		})
 

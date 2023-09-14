@@ -63,7 +63,7 @@ var _ = Describe("MonsterController", func() {
 
 			It("body should have equivalent values", func() {
 				l, _ := utilstests.DeserializeList(response.Body.String())
-				Expect(len(l)).To(Equal(1))
+				Expect(l).To(HaveLen(1))
 				for _, m := range l {
 					Expect(m["id"]).To(BeEquivalentTo(monster.ID))
 					Expect(m["name"]).To(Equal("Blue Snake"))
@@ -344,30 +344,62 @@ var _ = Describe("MonsterController", func() {
 
 	})
 
-	// TODO Implement the tests below
 	Describe("Import CSV", func() {
-		var _ *httptest.ResponseRecorder
-
-		JustBeforeEach(func() {
-			req, _ := http.NewRequest(http.MethodPost, "/monsters/import", nil)
-			_ = utilstests.ExecuteRequest(req)
-		})
+		var response *httptest.ResponseRecorder
 
 		Context("should fail when importing csv file with an empty monster", func() {
 
-			PIt("status code should be 400")
+			JustBeforeEach(func() {
+
+				req, err := utilstests.CreateMultiPartRequestByFilename("monsters-empty-monster.csv")
+
+				if err != nil {
+					Fail("error building empty monster request")
+				}
+
+				response = utilstests.ExecuteRequest(req)
+			})
+
+			It("status code should be 400", func() {
+				Expect(response.Code).To(Equal(400))
+			})
 
 		})
 
 		Context("should fail when importing csv file with wrong or inexistent columns.", func() {
+			JustBeforeEach(func() {
 
-			PIt("status code should be 400")
+				req, err := utilstests.CreateMultiPartRequestByFilename("monsters-wrong-column.csv")
+
+				if err != nil {
+					Fail("error building monster wrong column request")
+				}
+
+				response = utilstests.ExecuteRequest(req)
+			})
+
+			It("status code should be 400", func() {
+				Expect(response.Code).To(Equal(400))
+			})
 
 		})
 
 		Context("should import all the CSV objects into the database successfully", func() {
 
-			PIt("status code should be 200")
+			JustBeforeEach(func() {
+
+				req, err := utilstests.CreateMultiPartRequestByFilename("monsters-correct.csv")
+
+				if err != nil {
+					Fail("error building monster correct request")
+				}
+
+				response = utilstests.ExecuteRequest(req)
+			})
+
+			It("status code should be 200", func() {
+				Expect(response.Code).To(Equal(200))
+			})
 
 		})
 

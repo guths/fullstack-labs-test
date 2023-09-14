@@ -18,3 +18,50 @@ type Battle struct {
 	UpdatedAt  time.Time      `json:"-"`
 	DeletedAt  gorm.DeletedAt `gorm:"index" json:"-"`
 }
+
+func (b *Battle) SetWinner() {
+	var winner Monster
+
+	fAttack, sAttack := getFirstAndSecondAttacker(b.MonsterA, b.MonsterB)
+	stopBattle := false
+	fDamage := fAttack.CalculateDamage()
+	sDamage := sAttack.CalculateDamage()
+
+	for !stopBattle {
+		sAttack.BeAttacked(fDamage)
+		fAttack.BeAttacked(sDamage)
+
+		if fAttack.Hp == 0 {
+			winner = b.MonsterB
+			stopBattle = true
+		}
+
+		if sAttack.Hp == 0 {
+			winner = b.MonsterA
+			stopBattle = true
+		}
+	}
+
+	b.Winner = winner
+	b.WinnerID = winner.ID
+}
+
+func getFirstAndSecondAttacker(monsterA, monsterB Monster) (Monster, Monster) {
+	if monsterA.Speed == monsterB.Speed {
+		return getHigherAndLowerAttacker(monsterA, monsterB)
+	}
+
+	if monsterA.Speed > monsterB.Speed {
+		return monsterA, monsterB
+	}
+
+	return monsterB, monsterA
+}
+
+func getHigherAndLowerAttacker(monsterA, monsterB Monster) (Monster, Monster) {
+	if monsterA.Attack > monsterB.Attack {
+		return monsterA, monsterB
+	}
+
+	return monsterB, monsterA
+}

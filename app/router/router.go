@@ -23,11 +23,14 @@ func Router() *gin.Engine {
 	battle := server.Group("/battle")
 	{
 		battle.GET("", controller.ListBattles)
+		battle.POST("", controller.Battle)
+		battle.DELETE("/:battleID", controller.DeleteBattle)
 	}
 
 	// Monters routes
 	monsters := server.Group("/monsters")
 	{
+		monsters.GET("", controller.ListMonsters)
 		monsters.POST("", controller.CreateMonster)
 		monsters.POST("/import", controller.ImportCSV)
 		monsters.GET("/:monsterID", controller.FetchMonster)

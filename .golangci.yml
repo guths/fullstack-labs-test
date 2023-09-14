@@ -42,7 +42,8 @@ linters:
     - gci
     - paralleltest
     - gofumpt
-
+    - tagalign
+    - depguard
     # deprecated
     - interfacer
     - scopelint
